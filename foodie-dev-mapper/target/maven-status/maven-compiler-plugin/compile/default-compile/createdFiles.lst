@@ -1,0 +1,14 @@
+com/hins/my/mapper/MyMapper.class
+com/hins/mapper/CarouselMapper.class
+com/hins/mapper/ItemsParamMapper.class
+com/hins/mapper/ItemsImgMapper.class
+com/hins/mapper/ItemsCommentsMapper.class
+com/hins/mapper/OrderStatusMapper.class
+com/hins/mapper/CategoryMapper.class
+com/hins/mapper/UserAddressMapper.class
+com/hins/mapper/CategoryCustomMapper.class
+com/hins/mapper/ItemsSpecMapper.class
+com/hins/mapper/OrdersMapper.class
+com/hins/mapper/OrderItemsMapper.class
+com/hins/mapper/ItemsMapper.class
+com/hins/mapper/UsersMapper.class

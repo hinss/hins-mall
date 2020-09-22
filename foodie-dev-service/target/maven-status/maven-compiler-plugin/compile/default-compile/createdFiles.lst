@@ -1,0 +1,6 @@
+com/hins/service/CategoryService.class
+com/hins/service/impl/CategoryServiceImpl.class
+com/hins/service/UserService.class
+com/hins/service/impl/CarouselServiceImpl.class
+com/hins/service/impl/UserServiceImpl.class
+com/hins/service/CarouselService.class

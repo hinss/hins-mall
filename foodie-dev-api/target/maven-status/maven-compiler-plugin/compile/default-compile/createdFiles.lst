@@ -1,0 +1,7 @@
+com/hins/aspect/ServiceLogAspect.class
+com/hins/config/Swagger2.class
+com/hins/config/CorsConfig.class
+com/hins/controller/HelloWorld.class
+com/hins/controller/PassportController.class
+com/hins/controller/IndexController.class
+com/hins/Application.class
