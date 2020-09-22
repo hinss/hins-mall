@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * @Description:
+ * @Description: 官方prod地址: http://shop.t.mukewang.com/index.html
  * @Author:Wyman
  * @Date: 2020-09-14
  */
