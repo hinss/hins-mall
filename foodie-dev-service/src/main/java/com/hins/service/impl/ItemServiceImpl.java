@@ -1,13 +1,9 @@
 package com.hins.service.impl;
 
-import com.hins.mapper.ItemsImgMapper;
-import com.hins.mapper.ItemsMapper;
-import com.hins.mapper.ItemsParamMapper;
-import com.hins.mapper.ItemsSpecMapper;
-import com.hins.pojo.Items;
-import com.hins.pojo.ItemsImg;
-import com.hins.pojo.ItemsParam;
-import com.hins.pojo.ItemsSpec;
+import com.hins.enums.ItemsCommentLevelEnum;
+import com.hins.mapper.*;
+import com.hins.pojo.*;
+import com.hins.pojo.vo.ItemCommentCountVO;
 import com.hins.pojo.vo.ItemInfoVO;
 import com.hins.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +34,9 @@ public class ItemServiceImpl implements ItemService {
     @Autowired
     private ItemsParamMapper itemsParamMapper;
 
+    @Autowired
+    private ItemsCommentsMapper itemsCommentsMapper;
+
     @Transactional(propagation = Propagation.SUPPORTS)
     @Override
     public ItemInfoVO getItemInfoVoByItemId(String itemId) {
@@ -67,4 +66,31 @@ public class ItemServiceImpl implements ItemService {
 
         return itemInfoVO;
     }
+
+    @Override
+    public ItemCommentCountVO getCommentLevel(String itemId){
+
+        ItemsComments itemsComments = new ItemsComments();
+        itemsComments.setItemId(itemId);
+        itemsComments.setCommentLevel(ItemsCommentLevelEnum.GOOD.type);
+
+        int goodCounts = itemsCommentsMapper.selectCount(itemsComments);
+
+        itemsComments.setCommentLevel(ItemsCommentLevelEnum.NORMAL.type);
+        int normalCounts = itemsCommentsMapper.selectCount(itemsComments);
+
+        itemsComments.setCommentLevel(ItemsCommentLevelEnum.BAD.type);
+        int badCounts = itemsCommentsMapper.selectCount(itemsComments);
+
+        Integer totalCounts = goodCounts + normalCounts + badCounts;
+
+        ItemCommentCountVO itemCommentCountVO = new ItemCommentCountVO();
+        itemCommentCountVO.setGoodCounts(goodCounts);
+        itemCommentCountVO.setNormalCounts(normalCounts);
+        itemCommentCountVO.setBadCounts(badCounts);
+        itemCommentCountVO.setTotalCounts(totalCounts);
+
+        return itemCommentCountVO;
+    }
+
 }

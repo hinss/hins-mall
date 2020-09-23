@@ -2,6 +2,7 @@ package com.hins.controller;
 
 import com.hins.enums.YesOrNo;
 import com.hins.pojo.Carousel;
+import com.hins.pojo.vo.ItemCommentCountVO;
 import com.hins.pojo.vo.ItemInfoVO;
 import com.hins.service.ItemService;
 import com.hins.utils.JSONResult;
@@ -11,10 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -42,6 +40,19 @@ public class ItemsController {
         ItemInfoVO itemInfoVo = itemService.getItemInfoVoByItemId(itemId);
 
         return JSONResult.ok(itemInfoVo);
+    }
+
+    @ApiOperation(value = "根据商品id获得商品评价等级", notes = "根据商品id获得商品评价等级", httpMethod = "GET")
+    @GetMapping("/commentLevel")
+    public JSONResult commentLevel(@RequestParam String itemId){
+
+        if(StringUtils.isBlank(itemId)){
+            return JSONResult.errorMsg(null);
+        }
+
+        ItemCommentCountVO itemCommentCountVO = itemService.getCommentLevel(itemId);
+
+        return JSONResult.ok(itemCommentCountVO);
     }
 
 }
