@@ -4,6 +4,7 @@ import com.hins.mapper.CategoryCustomMapper;
 import com.hins.mapper.CategoryMapper;
 import com.hins.pojo.Category;
 import com.hins.pojo.vo.CategoryVO;
+import com.hins.pojo.vo.RootCatItemsVO;
 import com.hins.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,7 +12,9 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Description:
@@ -46,6 +49,14 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryCustomMapper.getByRootCatId(rootCatId);
     }
 
+    @Transactional(propagation = Propagation.SUPPORTS)
+    @Override
+    public List<RootCatItemsVO> getRootCatItemsVO(Integer rootCatId) {
 
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("rootCatId", rootCatId);
 
+        List<RootCatItemsVO> rootCatItemsList = categoryCustomMapper.getRootCatItemsList(paramMap);
+        return rootCatItemsList;
+    }
 }

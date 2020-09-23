@@ -4,6 +4,7 @@ import com.hins.enums.YesOrNo;
 import com.hins.pojo.Carousel;
 import com.hins.pojo.Category;
 import com.hins.pojo.vo.CategoryVO;
+import com.hins.pojo.vo.RootCatItemsVO;
 import com.hins.service.CarouselService;
 import com.hins.service.CategoryService;
 import com.hins.utils.JSONResult;
@@ -62,6 +63,18 @@ public class IndexController {
 
         List<CategoryVO> catByRootCatId = categoryService.getCatByRootCatId(rootCatId);
         return JSONResult.ok(catByRootCatId);
+    }
+
+    @ApiOperation(value = "根据一级分类获取最新6个推荐商品", notes = "根据一级分类获取最新6个推荐商品", httpMethod = "GET")
+    @GetMapping("/sixNewItems/{rootCatId}")
+    public JSONResult sixNewItems(@PathVariable Integer rootCatId){
+
+        if(rootCatId == null){
+            return JSONResult.errorMsg("");
+        }
+
+        List<RootCatItemsVO> rootCatItemsVO = categoryService.getRootCatItemsVO(rootCatId);
+        return JSONResult.ok(rootCatItemsVO);
     }
 
 }

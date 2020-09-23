@@ -14,7 +14,6 @@ public class RootCatItemsVO {
     private String slogan;
     private String catImage;
     private String bgColor;
-    private String logo;
 
     private List<SixNewItemVO> simpleItemList;
 
@@ -56,14 +55,6 @@ public class RootCatItemsVO {
 
     public void setBgColor(String bgColor) {
         this.bgColor = bgColor;
-    }
-
-    public String getLogo() {
-        return logo;
-    }
-
-    public void setLogo(String logo) {
-        this.logo = logo;
     }
 
     public List<SixNewItemVO> getSimpleItemList() {
