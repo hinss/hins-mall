@@ -7,7 +7,7 @@
     <result column="commentLevel" property="commentLevel" />
     <result column="content" property="content" />
     <result column="userFace" property="userFace" />
-    <result column="nickName" property="nickName"  />
+    <result column="nickname" property="nickname"  />
   </resultMap>
 
 
@@ -18,7 +18,7 @@
           ic.content as content,
           ic.created_time as createdTime,
           u.face as userFace,
-          u.nickname as nickName
+          u.nickname as nickname
         FROM items_comments ic
         LEFT JOIN users u
         ON ic.user_id = u.id

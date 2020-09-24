@@ -119,7 +119,7 @@ public class ItemServiceImpl implements ItemService {
         PageHelper.startPage(page, pageSize);
 
         List<ItemCommentVO> itemCommentVOS = itemsCommentsMapperCustom.selectItemComments(map);
-        itemCommentVOS.stream().forEach(f-> DesensitizationUtil.commonDisplay(f.getNickName()));
+        itemCommentVOS.stream().forEach(f-> f.setNickname(DesensitizationUtil.commonDisplay(f.getNickname())));
 
         return getPagedGridResult(itemCommentVOS, page);
     }
