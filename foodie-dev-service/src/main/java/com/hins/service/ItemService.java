@@ -30,4 +30,9 @@ public interface ItemService {
      */
     public PagedGridResult getSearchItemList(String keyword, String sort, Integer page, Integer pageSize);
 
+    /**
+     * 根据三级分类id 搜索商品
+     */
+    public PagedGridResult getSearchItemList(Integer thirdCatId, String sort, Integer page, Integer pageSize);
+
 }
