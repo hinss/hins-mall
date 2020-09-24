@@ -8,6 +8,7 @@ import com.hins.pojo.*;
 import com.hins.pojo.vo.ItemCommentCountVO;
 import com.hins.pojo.vo.ItemCommentVO;
 import com.hins.pojo.vo.ItemInfoVO;
+import com.hins.pojo.vo.ItemSearchVO;
 import com.hins.service.ItemService;
 import com.hins.utils.DesensitizationUtil;
 import com.hins.utils.PagedGridResult;
@@ -46,6 +47,9 @@ public class ItemServiceImpl implements ItemService {
 
     @Autowired
     private ItemsCommentsMapperCustom itemsCommentsMapperCustom;
+
+    @Autowired
+    private ItemsMapperCustom itemsMapperCustom;
 
     @Transactional(propagation = Propagation.SUPPORTS)
     @Override
@@ -124,7 +128,22 @@ public class ItemServiceImpl implements ItemService {
         return getPagedGridResult(itemCommentVOS, page);
     }
 
-    private PagedGridResult getPagedGridResult(List<ItemCommentVO> itemCommentVOS, Integer page){
+    @Transactional(propagation = Propagation.SUPPORTS)
+    @Override
+    public PagedGridResult getSearchItemList(String keyword, String sort, Integer page, Integer pageSize) {
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("keyword", keyword);
+        map.put("sort", sort);
+
+        PageHelper.startPage(page, pageSize);
+
+        List<ItemSearchVO> itemSearchVOS = itemsMapperCustom.searchItems(map);
+
+        return getPagedGridResult(itemSearchVOS, page);
+    }
+
+    private PagedGridResult getPagedGridResult(List<?> itemCommentVOS, Integer page){
 
         PageInfo<?> pageList = new PageInfo<>(itemCommentVOS);
         PagedGridResult grid = new PagedGridResult();

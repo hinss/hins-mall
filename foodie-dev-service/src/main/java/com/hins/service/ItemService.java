@@ -23,5 +23,11 @@ public interface ItemService {
      * 根据商品id获得商品评价
      * @return
      */
-    PagedGridResult getItemCommentList(String itemId, Integer level, Integer page, Integer pageSize);
+    public PagedGridResult getItemCommentList(String itemId, Integer level, Integer page, Integer pageSize);
+
+    /**
+     * 根据keyword 搜索商品
+     */
+    public PagedGridResult getSearchItemList(String keyword, String sort, Integer page, Integer pageSize);
+
 }
