@@ -7,16 +7,20 @@ com/hins/pojo/bo/UserBO.class
 org/n3r/idworker/utils/Ip.class
 org/n3r/idworker/RandomCodeStrategy.class
 org/n3r/idworker/utils/Serializes.class
+com/hins/pojo/vo/SixNewItemVO.class
 com/hins/pojo/ItemsComments.class
 com/hins/pojo/Category.class
+com/hins/pojo/vo/RootCatItemsVO.class
 org/n3r/idworker/WorkerIdStrategy.class
 com/hins/pojo/ItemsImg.class
 org/n3r/idworker/InvalidSystemClock.class
+com/hins/pojo/vo/ItemCommentCountVO.class
 com/hins/pojo/ItemsParam.class
 com/hins/pojo/Items.class
 org/n3r/idworker/Code.class
 org/n3r/idworker/utils/IPv4Utils.class
 org/n3r/idworker/strategy/DefaultRandomCodeStrategy$1.class
+com/hins/pojo/vo/ItemInfoVO.class
 org/n3r/idworker/IdWorker.class
 org/n3r/idworker/Test.class
 org/n3r/idworker/utils/HttpReq.class
@@ -28,6 +32,7 @@ org/n3r/idworker/utils/Props$Silent.class
 com/hins/pojo/UserAddress.class
 org/n3r/idworker/strategy/FileLock.class
 com/hins/pojo/Users.class
+com/hins/pojo/vo/ItemSearchVO.class
 org/n3r/idworker/strategy/DayPrefixRandomCodeStrategy.class
 com/hins/pojo/OrderStatus.class
 org/n3r/idworker/Id.class
@@ -35,5 +40,6 @@ org/n3r/idworker/Sid.class
 org/n3r/idworker/Sid$1.class
 com/hins/pojo/Orders.class
 org/n3r/idworker/strategy/DefaultWorkerIdStrategy$1.class
+com/hins/pojo/vo/ItemCommentVO.class
 org/n3r/idworker/strategy/DefaultWorkerIdStrategy.class
 com/hins/pojo/OrderItems.class

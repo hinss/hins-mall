@@ -5,10 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.hins.enums.ItemsCommentLevelEnum;
 import com.hins.mapper.*;
 import com.hins.pojo.*;
-import com.hins.pojo.vo.ItemCommentCountVO;
-import com.hins.pojo.vo.ItemCommentVO;
-import com.hins.pojo.vo.ItemInfoVO;
-import com.hins.pojo.vo.ItemSearchVO;
+import com.hins.pojo.vo.*;
 import com.hins.service.ItemService;
 import com.hins.utils.DesensitizationUtil;
 import com.hins.utils.PagedGridResult;
@@ -18,9 +15,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Description:
@@ -168,5 +163,16 @@ public class ItemServiceImpl implements ItemService {
         grid.setRecords(pageList.getTotal());
 
         return grid;
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    @Override
+    public List<ShopcartVO> queryItemsBySpecIds(String specIds) {
+
+        String ids[] = specIds.split(",");
+        List<String> specIdsList = new ArrayList<>();
+        Collections.addAll(specIdsList, ids);
+
+        return itemsMapperCustom.queryItemsBySpecIds(specIdsList);
     }
 }

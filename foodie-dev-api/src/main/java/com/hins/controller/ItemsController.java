@@ -4,6 +4,7 @@ import com.hins.enums.YesOrNo;
 import com.hins.pojo.Carousel;
 import com.hins.pojo.vo.ItemCommentCountVO;
 import com.hins.pojo.vo.ItemInfoVO;
+import com.hins.pojo.vo.ShopcartVO;
 import com.hins.service.ItemService;
 import com.hins.utils.JSONResult;
 import com.hins.utils.PagedGridResult;
@@ -142,6 +143,17 @@ public class ItemsController extends BaseController{
         PagedGridResult gridResult = itemService.getSearchItemList(catId, sort, page, pageSize);
 
         return JSONResult.ok(gridResult);
+    }
+
+    @ApiOperation(value = "根据商品规格ids获得商品信息", notes = "根据商品规格ids获得商品信息", httpMethod = "GET")
+    @GetMapping("/refresh")
+    public JSONResult refresh(
+            @ApiParam(name = "itemSpecIds", value = "商品规格ids", required = false)
+            @RequestParam String itemSpecIds){
+
+        List<ShopcartVO> shopcartVOS = itemService.queryItemsBySpecIds(itemSpecIds);
+
+        return JSONResult.ok(shopcartVOS);
     }
 
 }
