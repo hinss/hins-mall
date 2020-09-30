@@ -41,4 +41,10 @@ public interface AddressService {
      */
     public void updateUserAddressToBeDefault(String userId,String addressId);
 
+    /**
+     * 通过用户Id 和 地址Id获得用户收货地址
+     * @return
+     */
+    public UserAddress queryByUserIdAndAddressId(String userId, String addressId);
+
 }

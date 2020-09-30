@@ -1,5 +1,7 @@
 package com.hins.service;
 
+import com.hins.pojo.Items;
+import com.hins.pojo.ItemsSpec;
 import com.hins.pojo.vo.ItemCommentCountVO;
 import com.hins.pojo.vo.ItemCommentVO;
 import com.hins.pojo.vo.ItemInfoVO;
@@ -43,5 +45,32 @@ public interface ItemService {
      */
     public List<ShopcartVO> queryItemsBySpecIds(String specIds);
 
+    /**
+     * 根据商品规格id查询
+     * @param itemSpecId
+     * @return
+     */
+    public ItemsSpec queryByItemSpecId(String itemSpecId);
+
+    /**
+     * 通过商品id查询商品名称
+     * @param itemId
+     * @return
+     */
+    public String  queryItemNameByItemId(String itemId);
+
+    /**
+     * 通过商品id查询商品图片url
+     * @param itemId
+     * @return
+     */
+    public String  queryItemImgByItemId(String itemId);
+
+    /**
+     * 扣除商品规格的库存数量
+     * @param itemSpecId
+     * @param stockCounts
+     */
+    public void decreaseItemStock(String itemSpecId, int stockCounts);
 
 }

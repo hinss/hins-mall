@@ -99,5 +99,12 @@
     </foreach>
   </select>
 
+  <update id="decreaseItemStock">
+     update items_spec
+     set stock = stock - #{pendingCounts}
+     where id = #{specId}
+     and stock >= #{pendingCounts}
+  </update>
+
 
 </mapper>

@@ -3,6 +3,7 @@ package com.hins.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.hins.enums.ItemsCommentLevelEnum;
+import com.hins.enums.YesOrNo;
 import com.hins.mapper.*;
 import com.hins.pojo.*;
 import com.hins.pojo.vo.*;
@@ -174,5 +175,40 @@ public class ItemServiceImpl implements ItemService {
         Collections.addAll(specIdsList, ids);
 
         return itemsMapperCustom.queryItemsBySpecIds(specIdsList);
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    @Override
+    public ItemsSpec queryByItemSpecId(String itemSpecId) {
+        return itemsSpecMapper.selectByPrimaryKey(itemSpecId);
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    @Override
+    public String queryItemNameByItemId(String itemId) {
+        Items items = itemsMapper.selectByPrimaryKey(itemId);
+        return items != null ? items.getItemName() : "";
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    @Override
+    public String queryItemImgByItemId(String itemId) {
+
+        ItemsImg itemsImg = new ItemsImg();
+        itemsImg.setItemId(itemId);
+        itemsImg.setIsMain(YesOrNo.YES.type);
+        ItemsImg result = itemsImgMapper.selectOne(itemsImg);
+
+        return result != null ? result.getUrl() : "";
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public void decreaseItemStock(String itemSpecId, int stockCounts) {
+
+        int res = itemsMapperCustom.decreaseItemStock(itemSpecId, stockCounts);
+        if(res != 1){
+            throw new RuntimeException("创建订单失败,该商品规格库存不足!");
+        }
     }
 }
