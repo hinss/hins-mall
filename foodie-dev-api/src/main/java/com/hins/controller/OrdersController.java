@@ -3,6 +3,8 @@ package com.hins.controller;
 import com.hins.enums.OrderStatusEnum;
 import com.hins.pojo.bo.ShopOrderBO;
 import com.hins.pojo.bo.ShopcartBO;
+import com.hins.pojo.vo.MerchantOrderVO;
+import com.hins.pojo.vo.OrderVO;
 import com.hins.service.OrderService;
 import com.hins.utils.CookieUtils;
 import com.hins.utils.JSONResult;
@@ -36,14 +38,16 @@ public class OrdersController extends BaseController {
                              HttpServletResponse response){
 
         //1. 创建订单
-        orderService.createOrder(shopOrderBO);
+        OrderVO orderVO = orderService.createOrder(shopOrderBO);
 
         //2. 创建订单后，移除购物车中已结算（已提交）的商品
         // TODO  整合redis之后，完善购物车中的已结算商品清楚，并且同步到前端的cookie中
 //         CookieUtils.setCookie(request, response, FOODIE_SHOPCART, "", true);
         //3. 向支付中心发送当前订单，用于保存支付中心的订单数据
+        MerchantOrderVO merchantOrderVO = orderVO.getMerchantOrderVO();
+        merchantOrderVO.setReturnUrl(payReturnUrl);
 
-        return JSONResult.ok();
+        return JSONResult.ok(orderVO.getOrderId());
     }
 
 

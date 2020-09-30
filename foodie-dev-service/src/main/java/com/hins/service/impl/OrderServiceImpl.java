@@ -7,6 +7,8 @@ import com.hins.mapper.OrderStatusMapper;
 import com.hins.mapper.OrdersMapper;
 import com.hins.pojo.*;
 import com.hins.pojo.bo.ShopOrderBO;
+import com.hins.pojo.vo.MerchantOrderVO;
+import com.hins.pojo.vo.OrderVO;
 import com.hins.service.AddressService;
 import com.hins.service.ItemService;
 import com.hins.service.OrderService;
@@ -46,7 +48,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
-    public void createOrder(ShopOrderBO shopOrderBO) {
+    public OrderVO createOrder(ShopOrderBO shopOrderBO) {
 
         String userId = shopOrderBO.getUserId();
         String addressId = shopOrderBO.getAddressId();
@@ -118,8 +120,21 @@ public class OrderServiceImpl implements OrderService {
         waitPayOrderStatus.setOrderId(orderId);
         waitPayOrderStatus.setOrderStatus(OrderStatusEnum.WAIT_PAY.type);
         waitPayOrderStatus.setCreatedTime(new Date());
-
         orderStatusMapper.insert(waitPayOrderStatus);
+
+        // 4. 构建商户订单，用于传给支付中心
+        MerchantOrderVO merchantOrderVO = new MerchantOrderVO();
+        merchantOrderVO.setMerchantOrderId(orderId);
+        merchantOrderVO.setMerchantUserId(userId);
+        merchantOrderVO.setAmount(realPayAmount + postAmount);
+        merchantOrderVO.setPayMethod(payMethod);
+
+        // 5. 构建OrderVO
+        OrderVO orderVO = new OrderVO();
+        orderVO.setOrderId(orderId);
+        orderVO.setMerchantOrderVO(merchantOrderVO);
+
+        return orderVO;
     }
 
     @Transactional(propagation = Propagation.REQUIRED)

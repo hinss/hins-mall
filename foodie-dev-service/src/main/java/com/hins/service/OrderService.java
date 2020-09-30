@@ -1,6 +1,7 @@
 package com.hins.service;
 
 import com.hins.pojo.bo.ShopOrderBO;
+import com.hins.pojo.vo.OrderVO;
 
 public interface OrderService {
 
@@ -8,7 +9,7 @@ public interface OrderService {
      * 创建订单
      * @param shopOrderBO
      */
-    public void createOrder(ShopOrderBO shopOrderBO);
+    public OrderVO createOrder(ShopOrderBO shopOrderBO);
 
     /**
      * 修改订单状态
