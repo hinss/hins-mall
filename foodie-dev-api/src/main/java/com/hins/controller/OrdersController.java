@@ -1,6 +1,7 @@
 package com.hins.controller;
 
 import com.hins.enums.OrderStatusEnum;
+import com.hins.pojo.OrderStatus;
 import com.hins.pojo.bo.ShopOrderBO;
 import com.hins.pojo.bo.ShopcartBO;
 import com.hins.pojo.vo.MerchantOrderVO;
@@ -12,8 +13,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -31,6 +33,9 @@ public class OrdersController extends BaseController {
     @Autowired
     private OrderService orderService;
 
+    @Autowired
+    private RestTemplate restTemplate;
+
     @ApiOperation(value = "创建订单", notes = "创建订单", httpMethod = "POST")
     @PostMapping("/create")
     public JSONResult create(@RequestBody ShopOrderBO shopOrderBO,
@@ -47,6 +52,24 @@ public class OrdersController extends BaseController {
         MerchantOrderVO merchantOrderVO = orderVO.getMerchantOrderVO();
         merchantOrderVO.setReturnUrl(payReturnUrl);
 
+        // 订单金额设置为1分钱
+        merchantOrderVO.setAmount(1);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("imoocUserId", "tmp2020");
+        headers.add("password", "tmp2020");
+
+        HttpEntity<MerchantOrderVO> httpEntity = new HttpEntity(merchantOrderVO, headers);
+
+        ResponseEntity<JSONResult> responseEntity =
+                restTemplate.postForEntity(paymentCenterUrl, httpEntity, JSONResult.class);
+
+        JSONResult body = responseEntity.getBody();
+        if(body.getStatus() != 200){
+            return JSONResult.errorMsg("支付中心订单创建失败，请联系管理员！");
+        }
+
         return JSONResult.ok(orderVO.getOrderId());
     }
 
@@ -56,6 +79,13 @@ public class OrdersController extends BaseController {
 
         orderService.updateOrderStatus(merchantOrderId, OrderStatusEnum.WAIT_DELIVER.type);
         return HttpStatus.OK.value();
+    }
+
+    @PostMapping("getPaidOrderInfo")
+    public JSONResult getPaidOrderInfo(String orderId){
+
+        OrderStatus orderStatus = orderService.queryOrderStatus(orderId);
+        return JSONResult.ok(orderStatus);
     }
 
 

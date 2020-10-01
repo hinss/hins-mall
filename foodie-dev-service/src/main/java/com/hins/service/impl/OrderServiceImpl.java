@@ -147,7 +147,11 @@ public class OrderServiceImpl implements OrderService {
         updateOrderStatus.setPayTime(new Date());
 
         orderStatusMapper.updateByPrimaryKeySelective(updateOrderStatus);
+    }
 
-
+    @Transactional(propagation = Propagation.SUPPORTS)
+    @Override
+    public OrderStatus queryOrderStatus(String orderId) {
+        return orderStatusMapper.selectByPrimaryKey(orderId);
     }
 }
