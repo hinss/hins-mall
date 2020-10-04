@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hins.mapper.OrdersMapperCustom" >
+
+  <resultMap id="myOrderVO" type="com.hins.pojo.vo.MyOrderVO">
+    <id column="orderId" property="orderId" />
+    <result column="createTime" property="createTime" />
+    <result column="payMethod" property="payMethod" />
+    <result column="realPayAmount" property="realPayAmount" />
+    <result column="postAmount" property="postAmount" />
+    <result column="isComment" property="isComment" />
+    <result column="orderStatus" property="orderStatus" />
+
+    <collection property="subOrderItemList"
+                column="orderId"
+                select="querySubMyOrderVOList"
+                ofType="com.hins.pojo.vo.MySubOrderItemVO">
+      <result column="itemId" property="itemId" />
+      <result column="itemImg" property="itemImg" />
+      <result column="itemName" property="itemName" />
+      <result column="itemSpecName" property="itemSpecName" />
+      <result column="buyCounts" property="buyCounts" />
+      <result column="price" property="price" />
+    </collection>
+  </resultMap>
+
+
+
+  <select id="queryMyOrderVOList" parameterType="map" resultMap="myOrderVO">
+      SELECT
+        od.id as orderId,
+        od.created_time as createTime,
+        od.pay_method as payMethod,
+        od.real_pay_amount as realPayAmount,
+        od.post_amount as postAmount,
+        od.is_comment as isComment,
+        os.order_status as orderStatus
+      FROM
+	    orders od
+      LEFT JOIN order_status os
+      ON od.id = os.order_id
+      WHERE od.user_id = #{paramMap.userId}
+      AND od.is_delete = 0
+      <if test="paramMap.orderStatus != null">
+        AND os.order_status = #{paramMap.orderStatus}
+      </if>
+      ORDER BY od.updated_time ASC
+  </select>
+
+  <select id="querySubMyOrderVOList" parameterType="String"
+          resultType="com.hins.pojo.vo.MySubOrderItemVO">
+     SELECT
+        item.item_id as itemId,
+        item.item_img as itemImg,
+        item.item_name as itemName,
+        item.item_spec_name as itemSpecName,
+        item.buy_counts as buyCounts,
+        item.price as price
+     FROM order_items item
+     WHERE item.order_id = #{orderId}
+  </select>
+
+
+
+</mapper>
