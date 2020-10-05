@@ -7,6 +7,7 @@ import com.hins.enums.YesOrNo;
 import com.hins.mapper.*;
 import com.hins.pojo.*;
 import com.hins.pojo.vo.*;
+import com.hins.service.BaseService;
 import com.hins.service.ItemService;
 import com.hins.utils.DesensitizationUtil;
 import com.hins.utils.PagedGridResult;
@@ -24,7 +25,7 @@ import java.util.*;
  * @Date: 2020-09-23
  */
 @Service
-public class ItemServiceImpl implements ItemService {
+public class ItemServiceImpl extends BaseService implements ItemService {
 
     @Autowired
     private ItemsMapper itemsMapper;
@@ -152,18 +153,6 @@ public class ItemServiceImpl implements ItemService {
         List<ItemSearchVO> itemSearchVOS = itemsMapperCustom.searchItemsByThirdCatId(map);
 
         return getPagedGridResult(itemSearchVOS, page);
-    }
-
-    private PagedGridResult getPagedGridResult(List<?> itemCommentVOS, Integer page){
-
-        PageInfo<?> pageList = new PageInfo<>(itemCommentVOS);
-        PagedGridResult grid = new PagedGridResult();
-        grid.setPage(page);
-        grid.setRows(itemCommentVOS);
-        grid.setTotal(pageList.getPages());
-        grid.setRecords(pageList.getTotal());
-
-        return grid;
     }
 
     @Transactional(propagation = Propagation.SUPPORTS)

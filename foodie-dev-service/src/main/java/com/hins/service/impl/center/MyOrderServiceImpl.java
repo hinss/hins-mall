@@ -65,11 +65,12 @@ public class MyOrderServiceImpl implements MyOrderService {
         OrderStatus updateOrderStatus = new OrderStatus();
         updateOrderStatus.setOrderId(orderId);
         updateOrderStatus.setDeliverTime(new Date());
+        updateOrderStatus.setOrderStatus(OrderStatusEnum.WAIT_RECEIVE.type);
 
         Example example = new Example(OrderStatus.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("order_id", orderId);
-        criteria.andEqualTo("order_status", OrderStatusEnum.WAIT_DELIVER.type);
+        criteria.andEqualTo("orderId", orderId);
+        criteria.andEqualTo("orderStatus", OrderStatusEnum.WAIT_DELIVER.type);
 
         orderStatusMapper.updateByExampleSelective(updateOrderStatus, example);
     }
@@ -84,8 +85,8 @@ public class MyOrderServiceImpl implements MyOrderService {
 
         Example example = new Example(OrderStatus.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("order_id", orderId);
-        criteria.andEqualTo("order_status", OrderStatusEnum.WAIT_RECEIVE.type);
+        criteria.andEqualTo("orderId", orderId);
+        criteria.andEqualTo("orderStatus", OrderStatusEnum.WAIT_RECEIVE.type);
 
         int res = orderStatusMapper.updateByExampleSelective(orderStatus, example);
         return res == 1 ? true : false;
@@ -102,9 +103,9 @@ public class MyOrderServiceImpl implements MyOrderService {
 
         Example example = new Example(Orders.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("user_id", userId);
+        criteria.andEqualTo("userId", userId);
         criteria.andEqualTo("id", orderId);
-        criteria.andEqualTo("is_delete", YesOrNo.NO.type);
+        criteria.andEqualTo("isDelete", YesOrNo.NO.type);
 
         int res = ordersMapper.updateByExampleSelective(updateOrders, example);
 

@@ -23,9 +23,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("myorders")
 public class MyOrderController extends BaseController {
 
-    @Autowired
-    private MyOrderService myOrderService;
-
     @ApiOperation(value = "根据用户id获得订单列表", notes = "根据用户id获得订单列表", httpMethod = "POST")
     @PostMapping("/query")
     public JSONResult query(
@@ -119,12 +116,12 @@ public class MyOrderController extends BaseController {
      * 用于验证用户和订单是否有关联关系，避免非法用户调用
      * @return
      */
-    private JSONResult checkUserOrder(String userId, String orderId) {
-        Orders order = myOrderService.queryMyOrder(userId, orderId);
-        if (order == null) {
-            return JSONResult.errorMsg("订单不存在！");
-        }
-        return JSONResult.ok();
-    }
+//    private JSONResult checkUserOrder(String userId, String orderId) {
+//        Orders order = myOrderService.queryMyOrder(userId, orderId);
+//        if (order == null) {
+//            return JSONResult.errorMsg("订单不存在！");
+//        }
+//        return JSONResult.ok();
+//    }
 
 }
