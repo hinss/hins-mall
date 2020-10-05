@@ -5,13 +5,18 @@ import com.github.pagehelper.PageInfo;
 import com.hins.enums.OrderStatusEnum;
 import com.hins.enums.YesOrNo;
 import com.hins.mapper.OrderStatusMapper;
+import com.hins.mapper.OrderStatusMapperCustom;
 import com.hins.mapper.OrdersMapper;
 import com.hins.mapper.OrdersMapperCustom;
 import com.hins.pojo.OrderStatus;
 import com.hins.pojo.Orders;
+import com.hins.pojo.vo.MyOrderStatusCountsVO;
 import com.hins.pojo.vo.MyOrderVO;
+import com.hins.service.BaseService;
 import com.hins.service.center.MyOrderService;
+import com.hins.utils.DateUtil;
 import com.hins.utils.PagedGridResult;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -29,7 +34,7 @@ import java.util.Map;
  * @Date: 2020-10-04
  */
 @Service
-public class MyOrderServiceImpl implements MyOrderService {
+public class MyOrderServiceImpl extends BaseService implements MyOrderService {
 
     @Autowired
     private OrdersMapperCustom ordersMapperCustom;
@@ -39,6 +44,9 @@ public class MyOrderServiceImpl implements MyOrderService {
 
     @Autowired
     private OrdersMapper ordersMapper;
+
+    @Autowired
+    private OrderStatusMapperCustom orderStatusMapperCustom;
 
     @Transactional(propagation = Propagation.SUPPORTS)
     @Override
@@ -82,6 +90,7 @@ public class MyOrderServiceImpl implements MyOrderService {
         OrderStatus orderStatus = new OrderStatus();
         orderStatus.setOrderId(orderId);
         orderStatus.setOrderStatus(OrderStatusEnum.SUCCESS.type);
+        orderStatus.setSuccessTime(new Date());
 
         Example example = new Example(OrderStatus.class);
         Example.Criteria criteria = example.createCriteria();
@@ -123,15 +132,46 @@ public class MyOrderServiceImpl implements MyOrderService {
         return ordersMapper.selectOne(orders);
     }
 
-    private PagedGridResult getPagedGridResult(List<?> itemCommentVOS, Integer page){
+    @Transactional(propagation = Propagation.SUPPORTS)
+    @Override
+    public MyOrderStatusCountsVO queryOrderStatusCounts(String userId) {
 
-        PageInfo<?> pageList = new PageInfo<>(itemCommentVOS);
-        PagedGridResult grid = new PagedGridResult();
-        grid.setPage(page);
-        grid.setRows(itemCommentVOS);
-        grid.setTotal(pageList.getPages());
-        grid.setRecords(pageList.getTotal());
+        Map<String, Object> map = new HashMap<>();
+        map.put("userId", userId);
+        map.put("orderStatus", OrderStatusEnum.WAIT_PAY.type);
 
-        return grid;
+        Integer waitPayCounts = orderStatusMapperCustom.queryStatusCounts(map);
+
+        map.put("orderStatus", OrderStatusEnum.WAIT_DELIVER.type);
+        Integer waitDeliverCounts = orderStatusMapperCustom.queryStatusCounts(map);
+
+        map.put("orderStatus", OrderStatusEnum.WAIT_RECEIVE.type);
+        Integer waitReceiveCounts = orderStatusMapperCustom.queryStatusCounts(map);
+
+        map.put("orderStatus", OrderStatusEnum.SUCCESS.type);
+        map.put("isComment", YesOrNo.NO.type);
+        Integer waitCommentCounts = orderStatusMapperCustom.queryStatusCounts(map);
+
+        MyOrderStatusCountsVO myOrderStatusCountsVO = new MyOrderStatusCountsVO();
+        myOrderStatusCountsVO.setWaitCommentCounts(waitCommentCounts);
+        myOrderStatusCountsVO.setWaitDeliverCounts(waitDeliverCounts);
+        myOrderStatusCountsVO.setWaitPayCounts(waitPayCounts);
+        myOrderStatusCountsVO.setWaitReceiveCounts(waitReceiveCounts);
+
+        return myOrderStatusCountsVO;
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    @Override
+    public PagedGridResult queryUserOrderTrend(String userId, Integer page, Integer pageSize) {
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("userId", userId);
+
+        PageHelper.startPage(page, pageSize);
+
+        List<OrderStatus> myOrderTrend = ordersMapperCustom.getMyOrderTrend(map);
+
+        return getPagedGridResult(myOrderTrend, page);
     }
 }

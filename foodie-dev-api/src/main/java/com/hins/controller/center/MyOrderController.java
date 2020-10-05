@@ -2,6 +2,7 @@ package com.hins.controller.center;
 
 import com.hins.controller.BaseController;
 import com.hins.pojo.Orders;
+import com.hins.pojo.vo.MyOrderStatusCountsVO;
 import com.hins.service.center.MyOrderService;
 import com.hins.utils.JSONResult;
 import com.hins.utils.PagedGridResult;
@@ -112,16 +113,49 @@ public class MyOrderController extends BaseController {
         return JSONResult.ok();
     }
 
-    /**
-     * 用于验证用户和订单是否有关联关系，避免非法用户调用
-     * @return
-     */
-//    private JSONResult checkUserOrder(String userId, String orderId) {
-//        Orders order = myOrderService.queryMyOrder(userId, orderId);
-//        if (order == null) {
-//            return JSONResult.errorMsg("订单不存在！");
-//        }
-//        return JSONResult.ok();
-//    }
+    @ApiOperation(value="用户订单状态数量", notes="用户订单状态数量", httpMethod = "POST")
+    @PostMapping("/statusCounts")
+    public JSONResult statusCounts(
+            @ApiParam(name = "userId", value = "用户id", required = true)
+            @RequestParam String userId) throws Exception {
+
+        if (StringUtils.isBlank(userId)) {
+            return JSONResult.errorMsg(null);
+        }
+
+        MyOrderStatusCountsVO myOrderStatusCountsVO = myOrderService.queryOrderStatusCounts(userId);
+
+        return JSONResult.ok(myOrderStatusCountsVO);
+    }
+
+    @ApiOperation(value="用户订单动向", notes="用户订单动向", httpMethod = "POST")
+    @PostMapping("/trend")
+    public JSONResult trend(
+            @ApiParam(name = "userId", value = "用户id", required = true)
+            @RequestParam String userId,
+            @ApiParam(name = "page", value = "页数", required = false)
+            @RequestParam Integer page,
+            @ApiParam(name = "pageSize", value = "每页条目数", required = false)
+            @RequestParam Integer pageSize) throws Exception {
+
+        if (StringUtils.isBlank(userId)) {
+            return JSONResult.errorMsg(null);
+        }
+
+        if (page == null) {
+            page = 1;
+        }
+        if (pageSize == null) {
+            pageSize = COMMENT_PAGE_SIZE;
+        }
+
+        PagedGridResult grid = myOrderService.queryUserOrderTrend(userId,
+                page,
+                pageSize);
+
+        return JSONResult.ok(grid);
+
+    }
+
 
 }
