@@ -11,6 +11,8 @@
 
     <artifactId>foodie-dev-api</artifactId>
 
+    <packaging>war</packaging>
+
     <!--
         common-mail
         api -> service -> mapper -> mapper -> common

@@ -46,6 +46,13 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <!-- 使用外部 tomcat部署 自带tomcat依赖要去掉 -->
+            <exclusions>
+                <exclusion>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                    <groupId>org.springframework.boot</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -63,7 +70,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.11</version>
+            <version>5.1.41</version>
         </dependency>
         <!-- mybatis -->
         <dependency>
@@ -130,6 +137,13 @@
             <groupId>com.github.pagehelper</groupId>
             <artifactId>pagehelper-spring-boot-starter</artifactId>
             <version>1.2.12</version>
+        </dependency>
+
+        <!-- 打包war [3] 添加依赖 -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <scope>provided</scope>
         </dependency>
 
     </dependencies>
