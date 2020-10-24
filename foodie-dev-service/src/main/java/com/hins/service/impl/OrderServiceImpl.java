@@ -7,6 +7,7 @@ import com.hins.mapper.OrderStatusMapper;
 import com.hins.mapper.OrdersMapper;
 import com.hins.pojo.*;
 import com.hins.pojo.bo.ShopOrderBO;
+import com.hins.pojo.bo.ShopcartBO;
 import com.hins.pojo.vo.MerchantOrderVO;
 import com.hins.pojo.vo.OrderVO;
 import com.hins.service.AddressService;
@@ -18,7 +19,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Description:
@@ -48,7 +51,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
-    public OrderVO createOrder(ShopOrderBO shopOrderBO) {
+    public OrderVO createOrder(ShopOrderBO shopOrderBO, List<ShopcartBO> shopcartBOList) {
 
         String userId = shopOrderBO.getUserId();
         String addressId = shopOrderBO.getAddressId();
@@ -81,12 +84,15 @@ public class OrderServiceImpl implements OrderService {
         Integer totalAmount = 0;
         Integer realPayAmount = 0;
         String[] itemSpecs = itemSpecIds.split(",");
+        List<ShopcartBO> toBeRemoveShopCartBoList = new ArrayList<>();
         for(String itemSpecId : itemSpecs){
 
             ItemsSpec itemsSpec = itemService.queryByItemSpecId(itemSpecId);
             String itemId = itemsSpec.getItemId();
-            // TODO 商品购买数量先默认为1 实际应该从redis中用户购物车中得到
-            Integer buyCounts = 1;
+            // 商品购买数量先默认为1 实际应该从redis中用户购物车中得到
+            ShopcartBO cartItem = getBuyCountsFromShopcart(shopcartBOList, itemSpecId);
+            int buyCounts = cartItem.getBuyCounts();
+            toBeRemoveShopCartBoList.add(cartItem);
 
             String itemName = itemService.queryItemNameByItemId(itemId);
             String imgUrl = itemService.queryItemImgByItemId(itemId);
@@ -133,6 +139,7 @@ public class OrderServiceImpl implements OrderService {
         OrderVO orderVO = new OrderVO();
         orderVO.setOrderId(orderId);
         orderVO.setMerchantOrderVO(merchantOrderVO);
+        orderVO.setToBeRemoveShopCartBoList(toBeRemoveShopCartBoList);
 
         return orderVO;
     }
@@ -153,5 +160,20 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderStatus queryOrderStatus(String orderId) {
         return orderStatusMapper.selectByPrimaryKey(orderId);
+    }
+
+    /**
+     * 从redis中的购物车里获取商品，目的：counts
+     * @param shopcartList
+     * @param specId
+     * @return
+     */
+    private ShopcartBO getBuyCountsFromShopcart(List<ShopcartBO> shopcartList, String specId) {
+        for (ShopcartBO cart : shopcartList) {
+            if (cart.getSpecId().equals(specId)) {
+                return cart;
+            }
+        }
+        return null;
     }
 }
