@@ -1,7 +1,9 @@
 package com.hins.controller.center;
 
+import com.hins.controller.BaseController;
 import com.hins.pojo.Users;
 import com.hins.pojo.bo.center.CenterUserBO;
+import com.hins.pojo.vo.UsersVO;
 import com.hins.resource.FileUploadResource;
 import com.hins.service.center.CenterUserService;
 import com.hins.utils.CookieUtils;
@@ -35,7 +37,7 @@ import java.util.Map;
 @Api(value = "userInfo - 用户详情", tags = {"用户详情的相关接口"})
 @RestController
 @RequestMapping("userInfo")
-public class CenterUserController {
+public class CenterUserController extends BaseController {
 
     @Autowired
     private CenterUserService centerUserService;
@@ -60,11 +62,10 @@ public class CenterUserController {
         }
 
         Users userInfo = centerUserService.updateUserInfo(centerUserBO, userId);
-        userInfo = setNullParam(userInfo);
+        //令牌token,会整合进redis，分布式会话
+        UsersVO usersVO = convertUsersVO(userInfo);
 
-        CookieUtils.setCookie(request,response,"user", JsonUtils.objectToJson(userInfo), true);
-
-        // TODO 后续要改,增加令牌token,会整合进redis，分布式会话
+        CookieUtils.setCookie(request,response,"user", JsonUtils.objectToJson(usersVO), true);
 
         return JSONResult.ok();
     }
@@ -147,11 +148,11 @@ public class CenterUserController {
 
         // 更新头像到数据库
         Users userInfo = centerUserService.updateUserFace(userId, finalUserFaceUrl);
-        userInfo = setNullParam(userInfo);
+        UsersVO usersVO = convertUsersVO(userInfo);
 
-        CookieUtils.setCookie(request,response,"user", JsonUtils.objectToJson(userInfo), true);
+        CookieUtils.setCookie(request,response,"user", JsonUtils.objectToJson(usersVO), true);
 
-        // TODO 后续要改,增加令牌token,会整合进redis，分布式会话
+
 
         return JSONResult.ok();
     }

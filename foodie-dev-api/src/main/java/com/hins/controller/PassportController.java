@@ -3,12 +3,12 @@ package com.hins.controller;
 import com.hins.pojo.Users;
 import com.hins.pojo.bo.ShopcartBO;
 import com.hins.pojo.bo.UserBO;
+import com.hins.pojo.vo.UsersVO;
 import com.hins.service.UserService;
 import com.hins.utils.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
@@ -80,9 +80,9 @@ public class PassportController extends BaseController {
         }
 
         Users userResult = userService.createUser(userBO);
-        userResult = setNullParam(userResult);
+        UsersVO usersVO = convertUsersVO(userResult);
 
-        CookieUtils.setCookie(request, response, "user", JsonUtils.objectToJson(userResult));
+        CookieUtils.setCookie(request, response, "user", JsonUtils.objectToJson(usersVO));
 
         return JSONResult.ok();
     }
@@ -106,12 +106,10 @@ public class PassportController extends BaseController {
             return JSONResult.errorMsg("用户名或密码输出错误");
         }
 
-        userResult = setNullParam(userResult);
-
+        UsersVO usersVO = convertUsersVO(userResult);
         CookieUtils.setCookie(request, response,
-                "user", JsonUtils.objectToJson(userResult), true);
+                "user", JsonUtils.objectToJson(usersVO), true);
 
-        // TODO 生成用户token，存入redis会话
         // 用户注册登录应该同步cookie 与redis中的购物车数据
         synchShopcartData(userResult.getId(), request, response);
 
@@ -126,9 +124,10 @@ public class PassportController extends BaseController {
         // 清楚用户的相关信息的cookie
         CookieUtils.deleteCookie(request, response, "user");
 
-        // TODO 分布式会话中需要清除用户数据
-        // 用户退出登录,需要清空购物车
+        //分布式会话中需要清除用户数据
+        redisOperator.del(REDIS_USER_TOKEN + ":" + userId);
 
+        // 用户退出登录,需要清空购物车
         CookieUtils.deleteCookie(request, response, FOODIE_SHOPCART);
 
 
