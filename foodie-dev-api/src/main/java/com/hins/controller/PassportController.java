@@ -82,7 +82,7 @@ public class PassportController extends BaseController {
         Users userResult = userService.createUser(userBO);
         UsersVO usersVO = convertUsersVO(userResult);
 
-        CookieUtils.setCookie(request, response, "user", JsonUtils.objectToJson(usersVO));
+        CookieUtils.setCookie(request, response, "user", JsonUtils.objectToJson(usersVO),true);
 
         return JSONResult.ok();
     }
