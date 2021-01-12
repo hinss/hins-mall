@@ -1,8 +1,8 @@
 spring:
   data:
     elasticsearch:
-      cluster-name: raymond-es-cls
-      cluster-nodes: 182.254.138.59:9300
+      cluster-name: es-cluster
+      cluster-nodes: 172.16.178.50:9300
   datasource:                                           # 数据源的相关配置
     type: com.zaxxer.hikari.HikariDataSource          # 数据源类型：HikariCP
     driver-class-name: com.mysql.jdbc.Driver          # mysql驱动

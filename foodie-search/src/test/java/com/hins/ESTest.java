@@ -1,5 +1,6 @@
 package com.hins;
 
+import com.hins.pojo.Shop;
 import com.hins.pojo.Stu;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -17,6 +18,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 /**
  * @author: hins
@@ -43,7 +45,7 @@ public class ESTest {
     public void createIndexStu(){
 
         Stu stu = new Stu();
-        stu.setStuId(1003L);
+        stu.setStuId(1001L);
         stu.setName("raymond");
         stu.setAge(25);
         stu.setMoney(88888888f);
@@ -63,16 +65,18 @@ public class ESTest {
     public void updateStuDoc() {
 
         Map<String, Object> sourceMap = new HashMap<>();
-//        sourceMap.put("sign", "I am not super man");
+        sourceMap.put("name", "Lucy");
+        sourceMap.put("sign", "I am not super man");
+        sourceMap.put("description", "I am not super man");
         sourceMap.put("money", 99.8f);
-//        sourceMap.put("age", 33);
+        sourceMap.put("age", 33);
 
         IndexRequest indexRequest = new IndexRequest();
         indexRequest.source(sourceMap);
 
         UpdateQuery updateQuery = new UpdateQueryBuilder()
                 .withClass(Stu.class)
-                .withId("1004")
+                .withId("1001")
                 .withIndexRequest(indexRequest)
                 .build();
 
@@ -81,20 +85,24 @@ public class ESTest {
         elasticsearchTemplate.update(updateQuery);
     }
 
+    /**
+     * 分页查询
+     */
     @Test
     public void searchStuDoc() {
 
-        Pageable pageable = PageRequest.of(0, 5);
+        Pageable pageable = PageRequest.of(0, 10);
 
-        SearchQuery query = new NativeSearchQueryBuilder()
-                .withQuery(QueryBuilders.matchQuery("description", "army man"))
+        SearchQuery searchQuery = new NativeSearchQueryBuilder()
+                .withQuery(QueryBuilders.matchQuery("desc", "下班坐飞机"))
                 .withPageable(pageable)
                 .build();
-        AggregatedPage<Stu> pagedStu = elasticsearchTemplate.queryForPage(query, Stu.class);
-        System.out.println("检索后的总分页数目为：" + pagedStu.getTotalPages());
-        List<Stu> stuList = pagedStu.getContent();
-        for (Stu s : stuList) {
-            System.out.println(s);
+
+        AggregatedPage<Shop> pageShops = elasticsearchTemplate.queryForPage(searchQuery, Shop.class);
+        System.out.println("检索后总共的分页数目为: " + pageShops.getTotalPages());
+        List<Shop> content = pageShops.getContent();
+        for(Shop shop : content){
+            System.out.println(shop);
         }
 
     }
