@@ -4,6 +4,7 @@ import com.hins.enums.YesOrNo;
 import com.hins.pojo.Carousel;
 import com.hins.pojo.vo.ItemCommentCountVO;
 import com.hins.pojo.vo.ItemInfoVO;
+import com.hins.pojo.vo.ItemSearchVO;
 import com.hins.pojo.vo.ShopcartVO;
 import com.hins.service.ItemService;
 import com.hins.utils.JSONResult;
@@ -115,6 +116,40 @@ public class ItemsController extends BaseController{
 
         return JSONResult.ok(gridResult);
     }
+
+    @ApiOperation(value = "导出商品列表", notes = "导出商品列表", httpMethod = "GET")
+    @GetMapping("/export")
+    public JSONResult export(
+            @ApiParam(name = "keywords", value = "搜索关键字", required = true)
+            @RequestParam String keywords,
+            @ApiParam(name = "sort", value = "排序规则", required = false)
+            @RequestParam String sort,
+            @ApiParam(name = "page", value = "页数", required = false)
+            @RequestParam Integer page,
+            @ApiParam(name = "pageSize", value = "每页条目数", required = false)
+            @RequestParam Integer pageSize){
+
+        if(StringUtils.isBlank(keywords)){
+            return JSONResult.errorMsg(null);
+        }
+
+        if(page == null){
+            page = 1;
+        }
+
+        if(pageSize == null){
+            pageSize = PAGE_SIZE;
+        }
+
+        PagedGridResult gridResult = itemService.getSearchItemList(keywords, sort, page, pageSize);
+        List<ItemSearchVO> rows = (List<ItemSearchVO>)gridResult.getRows();
+        // TODO 导出导浏览器直接下载的方式
+
+
+
+        return JSONResult.ok(gridResult);
+    }
+
 
     @ApiOperation(value = "根据三级分类id搜索商品列表", notes = "根据三级分类id搜索商品列表", httpMethod = "GET")
     @GetMapping("/catItems")
