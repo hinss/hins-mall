@@ -1,6 +1,6 @@
 #floders
 .idea/
-target/
+target/*
 logs/
 log/
 log
