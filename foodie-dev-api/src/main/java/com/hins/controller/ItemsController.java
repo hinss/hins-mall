@@ -13,9 +13,12 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.server.ServerHttpRequest;
+import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -127,7 +130,9 @@ public class ItemsController extends BaseController{
             @ApiParam(name = "page", value = "页数", required = false)
             @RequestParam Integer page,
             @ApiParam(name = "pageSize", value = "每页条目数", required = false)
-            @RequestParam Integer pageSize){
+            @RequestParam Integer pageSize,
+            ServerHttpRequest request,
+            ServerHttpResponse response){
 
         if(StringUtils.isBlank(keywords)){
             return JSONResult.errorMsg(null);
@@ -144,6 +149,7 @@ public class ItemsController extends BaseController{
         PagedGridResult gridResult = itemService.getSearchItemList(keywords, sort, page, pageSize);
         List<ItemSearchVO> rows = (List<ItemSearchVO>)gridResult.getRows();
         // TODO 导出导浏览器直接下载的方式
+        XSSFWorkbook workbook = new XSSFWorkbook();
 
 
 

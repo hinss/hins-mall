@@ -33,7 +33,7 @@ public class BaseController {
 
     // 微信支付成功 -> 支付中心 -> 天天吃货平台
     //                      -> 回调通知的url
-    String payReturnUrl = "http://www.hinsmall.club:8088/foodie-dev-api/orders/notifyMerchantOrderPaid";
+    String payReturnUrl = "http://api.hinsmall.club:8088/foodie-dev-api/orders/notifyMerchantOrderPaid";
 
     // 支付中心创建商户订单url
     String paymentCenterUrl = "http://payment.t.mukewang.com/foodie-payment/payment/createMerchantOrder";

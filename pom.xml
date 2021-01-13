@@ -15,6 +15,7 @@
         <module>foodie-dev-service</module>
         <module>foodie-dev-api</module>
         <module>foodie-sso</module>
+        <module>foodie-search</module>
     </modules>
 
     <!-- 1.引入Springboot依赖parent -->
@@ -151,6 +152,18 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>3.17</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>3.17</version>
         </dependency>
 
     </dependencies>
