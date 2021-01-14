@@ -81,10 +81,10 @@ public class ExportController {
             urlCell.setCellValue(itemSearchVO.getImgUrl());
         }
 
-        // TODO 优化返回现在返回还会报错
         OutputStream output = response.getOutputStream();
         response.reset();
         response.setHeader("Content-Disposition", "attachment; filename=" + new String("test".getBytes(),"iso-8859-1") + ".xls");
+        // 告诉浏览器返回的是 二进制数据流的返回类型
         response.setContentType("APPLICATION/OCTET-STREAM");
 
         workbook.write(output);
